@@ -1,0 +1,20 @@
+# Stage 1: The Python Environment
+FROM python:3.10-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Install the exact required ML and API libraries
+RUN pip install --no-cache-dir fastapi uvicorn pydantic textblob
+
+# Download the required NLP dictionary for TextBlob
+RUN python -m textblob.download_corpora
+
+# Copy the specialized worker code into the container
+COPY ./specialized_models/text_worker.py /app/text_worker.py
+
+# Open Port 8001 for the Gateway to communicate
+EXPOSE 8001
+
+# Start the NLP Drone
+CMD ["python", "text_worker.py"]

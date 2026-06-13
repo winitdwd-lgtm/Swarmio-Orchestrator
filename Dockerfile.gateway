@@ -1,0 +1,8 @@
+FROM python:3.10-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY routing_engine/gateway.py .
+# <-- NEW: Pack the website into the box!
+COPY frontend/ ./frontend/
+CMD ["gunicorn", "gateway:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]

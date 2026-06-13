@@ -1,0 +1,22 @@
+name: Swarmio Enterprise CI/CD Pipeline
+
+# When does this robot wake up? Every time Vineet pushes code to the 'main' branch!
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # GitHub gives you a free Linux server in the cloud for this!
+
+    steps:
+    # 1. The robot downloads your code onto its free server
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # 2. The robot checks if your Docker Factory actually builds without crashing
+    - name: Test Docker Swarm Build
+      run: |
+        echo "Starting Swarmio Engine Build Test..."
+        docker-compose build
+        echo "Build Successful! All specialist drones are ready for deployment."

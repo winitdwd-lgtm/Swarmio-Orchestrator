@@ -1,0 +1,16 @@
+# Stage 1: The Python Environment
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install dependencies
+RUN pip install --no-cache-dir fastapi uvicorn pydantic
+
+# Copy the worker code
+COPY ./specialized_models/math_worker.py /app/math_worker.py
+
+# Open Port 8002
+EXPOSE 8002
+
+# Start the Math Drone
+CMD ["python", "math_worker.py"]

@@ -1,0 +1,53 @@
+services:
+  # 1. The Heavy Notebook (PostgreSQL)
+  postgres_db:
+    image: postgres:15
+    container_name: swarmio_postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+  # 2. The Fast Receptionist (Redis)
+  redis_cache:
+    image: redis:7
+    container_name: swarmio_redis
+    ports:
+      - "6379:6379"
+
+  # 3. Our Text Specialist Drone
+  text_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.text
+    container_name: swarmio_text_worker
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis_cache
+
+  # 4. Our Math Specialist Drone
+  math_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.math
+    container_name: swarmio_math_worker
+    ports:
+      - "8002:8002"
+    depends_on:
+      - redis_cache
+
+  # 5. The Central Gateway Router (The Receptionist)
+  gateway_router:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: swarmio_gateway
+    env_file:
+      - .env # <-- NEW: Gives Gateway access to the Vault
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis_cache
+      - text_worker
+      - math_worker

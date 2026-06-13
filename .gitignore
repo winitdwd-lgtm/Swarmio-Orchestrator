@@ -1,0 +1,6 @@
+# This tells GitHub to IGNORE these files so hackers can't see them
+.env
+__pycache__/
+*.pyc
+.venv/
+.vscode/
