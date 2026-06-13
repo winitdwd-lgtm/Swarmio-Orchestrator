@@ -18,5 +18,5 @@ jobs:
     - name: Test Docker Swarm Build
       run: |
         echo "Starting Swarmio Engine Build Test..."
-        docker-compose build
+        docker compose build
         echo "Build Successful! All specialist drones are ready for deployment."
